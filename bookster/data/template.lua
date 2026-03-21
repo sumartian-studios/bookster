@@ -101,7 +101,8 @@ local sub_file_transformations = {
     no_indent_next = true
     return pandoc.RawBlock('latex', '\\scenebreak')
   end,
-  -- British English suggests no indentation after scenebreak.
+
+  -- British English suggests no indentation after scenebreak
   Para = function(el)
     if no_indent_next then
       no_indent_next = false
