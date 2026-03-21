@@ -1,0 +1,469 @@
+% Pandoc LaTeX template for book compilation
+% This template is designed to work with Bookster and can be customized using the provided metadata fields
+
+\documentclass[11pt, oneside]{book}
+
+\PassOptionsToPackage{no-math}{fontspec}
+
+\usepackage[paperheight=9in,
+            paperwidth=6in,
+            left=0.9in,
+            right=0.9in,
+            top=1.25in,
+            bottom=1.4in,
+            footskip=1.5cm,
+            headheight=14pt]{geometry}
+
+\usepackage{fontspec}
+\usepackage[british]{babel}
+\usepackage[tracking=true,protrusion=true,expansion=true]{microtype}
+\babelprovide[import, onchar=ids fonts]{english}
+
+\babelfont{rm}[
+  UprightFont    = SourceSerif4-Regular,
+  ItalicFont     = SourceSerif4-It,
+  BoldFont       = SourceSerif4-Semibold,
+  BoldItalicFont = SourceSerif4-SemiboldIt,
+  FontFace       = {sb}{n}{Font = SourceSerif4-Semibold},
+  FontFace       = {sb}{it}{Font = SourceSerif4-SemiboldIt},
+  FontFace       = {l}{n}{Font = SourceSerif4-Light},
+  FontFace       = {l}{it}{Font = SourceSerif4-LightIt}
+]{Source Serif 4}
+
+\babelfont{tt}[
+  UprightFont    = SourceCodePro-Regular,
+  ItalicFont     = SourceCodePro-It,
+  BoldFont       = SourceCodePro-Bold,
+  BoldItalicFont = SourceCodePro-BoldIt
+]{Source Code Pro}
+
+\DeclareTextFontCommand{\textsb}{\fontseries{sb}\selectfont}
+\DeclareTextFontCommand{\textl}{\fontseries{l}\selectfont}
+
+% --- ADDITIONAL PACKAGES ---
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{epigraph}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{afterpage}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage[object=vectorian]{pgfornament}
+\usepackage{lettrine}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{unicode-math}
+
+\setmathfont{Erewhon Math}
+
+\AtBeginEnvironment{equation}{\small}
+\AtBeginEnvironment{displaymath}{\small}
+\AtBeginEnvironment{itemize}{\small}
+
+\newcommand{\scenebreak}{%
+  \par\vspace{3ex}
+  \centerline{* * *}
+  \vspace{2ex}\par
+}
+
+% Set the label (e.g. "Figure 1") and the text to be small and italic
+\captionsetup{
+    font=small,
+    labelfont=it,
+    textfont=it,
+    justification=centering
+}
+
+% Syntax highlighting for code blocks using listings
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{purple},
+  frame=single
+}
+
+% Drop caps for the first letter of each chapter
+\setcounter{DefaultLines}{3}
+\setlength{\DefaultFindent}{8pt}
+\setlength{\DefaultNindent}{0pt}
+\renewcommand{\LettrineFontHook}{\fontseries{l}\selectfont}
+
+% Do not delete
+% Magic command to prevent errors
+\newcommand{\passthrough}[1]{#1}
+
+% Fix for "Undefined control sequence \pandocbounded"
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{
+  \sbox\pandoc@box{#1}
+  \ifdim\wd\pandoc@box>\linewidth
+    \resizebox{\linewidth}{!}{\usebox\pandoc@box}
+  \else
+    \usebox\pandoc@box
+  \fi
+}
+\makeatother
+
+% Dim text
+\definecolor{dimtextcolor}{gray}{0.2}
+
+% --- HEADER AND FOOTER CONFIGURATION ---
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\textcolor{dimtextcolor}{\small\itshape\thepage}}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+% \fancyhead[C]{\textcolor{dimtextcolor}{\textit{\nouppercase{\leftmark}}}}
+\fancyfoot[C]{\textcolor{dimtextcolor}{\small\itshape\thepage}}
+
+\fancyhead[L]{\textcolor{dimtextcolor}{\small\itshape\nouppercase{\leftmark}}}
+\fancyhead[R]{\textcolor{dimtextcolor}{\small\itshape\nouppercase{Part \thepart}}}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Paragraph spacing for fiction
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+
+% Table of contents styling
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\renewcommand\cftchapdotsep{\cftdotsep}
+
+% Prevent overflow of long lines
+\setlength{\emergencystretch}{3em}
+
+% Pandoc helper command (do not remove)
+\providecommand{\tightlist}{
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Ensure Pandoc's CSL (if used) doesn't break
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newenvironment{CSLReferences}
+  {\setlength{\parindent}{0pt}
+  \everypar{\parindent=\cslhangindent}
+  \ignorespaces}
+  {\par}
+
+% Part covers
+\newcommand{\makepartcover}[4]{
+  \cleardoublepage
+  \stepcounter{part}
+  \phantomsection 
+  \addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}
+  
+  \thispagestyle{empty}
+  
+  {
+    % Epigraph Styling Configuration
+    \setlength{\epigraphwidth}{0.7\textwidth}
+    \renewcommand{\epigraphrule}{0pt}
+    
+    % Left-align the text and the source
+    \renewcommand{\textflush}{flushleft}
+    \renewcommand{\sourceflush}{flushleft}
+    
+    % Custom styling for the source (dash and small caps or italics)
+    \renewcommand{\epigraphsize}{\small}
+    
+    \vspace*{\fill}
+    
+    \begin{center}
+      % Part Number
+      {\large\textsc{\partname}\ \thepart} 
+      \vspace{1cm} 
+      
+      % Part Title
+      \begin{minipage}{0.9\textwidth}
+        \centering
+        \Huge\itshape #1\par
+        \vspace{2cm}
+        \ifblank{#4}{}{
+          \pgfornament[width=3cm, opacity=0.1]{#4}
+        }
+      \end{minipage}
+    \end{center}
+    
+    \vspace{2cm} 
+    \renewcommand{\sourceflush}{flushright}
+
+    % Cover quote and quote author
+    \hspace{0.15\textwidth}
+    \begin{minipage}{0.8\textwidth}
+      \if\relax\detokenize{#2}\relax\else
+        \makeatletter
+        \def\@epirule{\rule[.5ex]{1pt}{60pt}}
+        \makeatother
+        \epigraph{\textit{#2}}{
+          \hspace{1em} \fontsize{9}{11}\selectfont \textit{--- #3}\hspace{2pt}
+        }
+      \fi
+    \end{minipage}
+
+    \vspace*{\fill}
+  }
+  \newpage
+}
+
+% Create blank pages
+\newcommand{\blankpage}{
+    \clearpage
+    \thispagestyle{empty}
+    \mbox{}
+    \clearpage
+}
+
+% Continue counting page numbers from the frontmatter in the backmatter
+\makeatletter
+\newcounter{savedfrontmatterpage}
+\renewcommand{\mainmatter}{
+  \cleardoublepage
+  \setcounter{savedfrontmatterpage}{\value{page}}
+  \@mainmattertrue
+  \pagenumbering{arabic}
+}
+
+\renewcommand\backmatter{
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \@mainmatterfalse
+  \pagenumbering{roman}
+  \setcounter{page}{\value{savedfrontmatterpage}}
+}
+\makeatother
+
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\makeatletter
+\@ifundefined{KOMAClassName}{
+  \IfFileExists{parskip.sty}{
+    \usepackage{parskip}
+  }{
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{
+  \KOMAoptions{parskip=half}}
+\makeatother
+\begin{document}
+
+% Command: \fullpagepic{filename}
+\newcommand{\fullpagepic}[1]{
+    \clearpage
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[inner sep=0pt] at (current page.center) {
+            \includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio=true]{#1}
+        };
+    \end{tikzpicture}
+    \clearpage
+}
+
+% --- FULL IMAGE COVER PAGE ---
+$if(cover-image)$
+  \begin{titlepage}
+  \fullpagepic{$cover-image$}
+  \end{titlepage}
+$endif$
+
+\blankpage
+
+% Reset page counter so the next page (Title Page) starts at 1
+\setcounter{page}{1}
+% -----------------------------
+
+% --- FRONT MATTER ---
+\frontmatter
+\pagestyle{empty}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    $if(logo)$
+      \includegraphics[width=90pt]{$logo$} 
+      \vspace{1.5cm} % Space between logo and title
+    $endif$
+
+    {\huge \textbf{$title$} \par}
+    \vspace{1cm}
+    {\Large \textit{$subtitle$} \par}
+    \vspace{2cm}
+    {\Large $author$ \par}
+    \vfill
+    {\large $publisher$ \par}
+    {\large \textit{$year$} \par}
+\end{titlepage}
+
+% Copyright Page
+\newpage
+\vspace*{\stretch{1.0}}
+{\small
+\setlength{\parindent}{0em}\setlength{\parskip}{1em}
+\vfill
+
+Copyright \copyright{} $year$ by $author$
+
+All rights reserved. No part of this publication may be reproduced, distributed, or transmitted in any form or by any means—including photocopying, recording, or other electronic or mechanical methods—without the prior written permission of the publisher, except for brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.
+
+This is a work of fiction. Names, characters, places, and incidents are products of the author’s imagination or are used fictitiously. Any resemblance to actual persons, living or dead, or actual events is purely coincidental.
+
+Published by $publisher$.
+
+$if(isbn)$
+ISBN: $isbn$
+$endif$
+}
+\vspace*{\stretch{2.0}}
+
+% Epigraph Page
+\newpage
+\renewcommand{\epigraphflush}{center}
+\setlength\epigraphwidth{.8\textwidth}
+\setlength{\epigraphrule}{0pt}
+\vspace*{\stretch{1.0}}
+\epigraph{\textit{$epigraph$\newline}}{\textit{--- $epigraph-author$}\hspace{1em}}
+\vspace*{\stretch{2.0}}
+
+\blankpage
+
+% Dedication Page
+\newpage
+\vspace*{\stretch{1.0}}
+\begin{center}
+\textit{$dedication$}
+\end{center}
+\vspace*{\stretch{2.0}}
+
+\blankpage
+
+% Title formatting for chapters
+\titleformat{\chapter}[display]
+  {\filcenter\normalfont}
+  {\textls[150]{\scshape\Large \chaptername\ \thechapter}}
+  {2ex}
+  {\Huge\itshape}
+  [\vspace{2ex}]
+
+\titlespacing*{\chapter}{0pt}{30pt}{60pt}
+
+% -------------------------------------------
+
+% Table of Contents
+\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\cfttoctitlefont}{\hfill\Huge\itshape}
+\renewcommand{\cftaftertoctitle}{\hfill}
+
+\newcommand{\sharedindent}{1em}
+\newcommand{\partnumwidth}{12mm}
+\newcommand{\chapnumwidth}{22mm}
+
+\renewcommand{\cftpartindent}{\sharedindent}
+\renewcommand{\cftpartnumwidth}{\partnumwidth}
+\renewcommand{\cftpartpresnum}{\hfill}
+\renewcommand{\cftpartaftersnum}{.\hspace{0.5em}}
+
+\renewcommand{\cftchapindent}{\dimexpr\sharedindent + \partnumwidth\relax}
+\renewcommand{\cftchapnumwidth}{\chapnumwidth}
+
+\renewcommand{\cftchappresnum}{\hfill Chapter~}
+\renewcommand{\cftchapaftersnum}{.\hspace{0.5em}}
+
+\renewcommand{\cftchapfont}{\fontseries{sb}\small\itshape\selectfont}
+\renewcommand{\cftchappagefont}{\fontseries{sb}\footnotesize\itshape\selectfont}
+
+\begin{spacing}{0.8}
+\tableofcontents
+\end{spacing}
+
+\cleardoublepage
+
+\renewcommand{\cftchappresnum}{Chapter\hfill} 
+\renewcommand{\cftchapaftersnum}{.\space\space}
+
+% British English typesetting standard indent
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+\setstretch{1.07}
+
+$for(include-before)$
+  \cleardoublepage
+  $include-before$
+$endfor$
+
+\setcounter{secnumdepth}{0} 
+
+% --- MAIN MATTER ---
+\mainmatter
+\pagestyle{fancy}
+\pagenumbering{arabic}
+
+% --- MAIN CONTENT ---
+$if(include-body)$
+  $for(include-body)$
+    % If the item has a title, make it a part cover. Otherwise, just include it as a chapter.
+    $if(it.title)$
+      \blankpage
+      \makepartcover{$it.title$}{$it.quote$}{$it.quote-author$}{$it.ornament$}
+    $endif$
+    $for(it.chapters)$
+      $it$
+    $endfor$
+  $endfor$
+$endif$
+
+% --- BACK MATTER ---
+\backmatter
+\pagestyle{empty}
+
+\addtocontents{toc}{\protect\addvspace{1em}}
+
+$for(include-after)$
+  \blankpage
+  $include-after$
+$endfor$
+
+\blankpage
+
+% About the Author
+\chapter*{About the Author \hfill}
+\thispagestyle{empty}
+
+\noindent
+\begin{minipage}[c]{3.5cm}
+    \vspace{3.2em} 
+    \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{$author-image$}
+\end{minipage}
+\hfill 
+\begin{minipage}[c]{\dimexpr\textwidth-4.5cm\relax}
+    \vspace{0pt}
+    {\LARGE\scshape\itshape $author$} \par\vspace{1.5em}
+    {\small\noindent\itshape $author-bio$ \par}
+\end{minipage}
+
+\blankpage
+
+\end{document}

@@ -1,0 +1,33 @@
+name: Build Demo
+
+push:
+  branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Pandoc, Bookster, and Fonts
+        run: |
+          apt-get update && apt-get install -y pandoc python3-pip
+          pip3 install . --break-system-packages
+
+      - name: Run Bookster Build
+        run: |
+          mkdir -p build
+          bookster --book-dir ./examples/book-2 --chapter-dir chapters --output ./build/output.pdf --compile --verbose
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: gh-pages
+          force_orphan: true

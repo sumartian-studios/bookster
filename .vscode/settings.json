@@ -1,0 +1,11 @@
+{
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false,
+    "python": true,
+    "latex": true
+  },
+  "Lua.diagnostics.globals": ["pandoc"]
+}

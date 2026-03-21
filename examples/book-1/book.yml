@@ -1,0 +1,10 @@
+title: "The First Book"
+subtitle: "Book One"
+author: "Sherlock Holmes"
+publisher: "Sumartian Studios"
+isbn: 978-0-00-000000-0
+year: 2026
+author-bio: "Etiam vitae blandit elit. Praesent viverra ornare lacus, vel consequat tortor varius a. Nulla cursus leo eu placerat fermentum. Phasellus ut sagittis ligula. Pellentesque elementum feugiat tellus, at finibus nulla molestie ac. Donec aliquam mauris vel pulvinar posuere. Fusce vitae dictum lacus, sed porttitor nisi. Mauris sit amet tristique odio. Etiam et venenatis neque. Vestibulum accumsan ultricies tellus ac egestas."
+
+include-body:
+  - chapters: [1, 3]
