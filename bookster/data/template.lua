@@ -133,7 +133,7 @@ local function automate_lettrine(blocks)
     local content = inlines[1].text
     local first_char = text.sub(content, 1, 1)
 
-    -- see if the first char is NOT a letter
+    -- See if the first char is NOT a letter
     if first_char:match("^[^%a]") then
       return blocks
     end

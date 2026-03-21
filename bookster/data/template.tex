@@ -362,10 +362,10 @@ $endif$
 % Title formatting for chapters
 \titleformat{\chapter}[display]
   {\filcenter\normalfont}
-  {\textls[150]{\scshape\Large \chaptername\ \thechapter}}
-  {2ex}
-  {\Huge\itshape}
-  [\vspace{2ex}]
+  {\textls[150]{\scshape\Large \chaptername\ \thechapter}\vspace{1em}}
+  {1ex}
+  {\Huge\itshape\centering\begin{minipage}{9cm}\centering}
+  [\end{minipage}\vspace{2ex}]
 
 \titlespacing*{\chapter}{0pt}{30pt}{60pt}
 
